@@ -1,185 +1,306 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Professional & Responsive Add Product Layout (English Only) -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:fitsSystemWindows="true"
-    android:orientation="vertical">
+    android:background="@color/background">
 
-    <!-- Toolbar with back button and title -->
+    <!-- Modern Toolbar with Gradient Background and Elevation -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@drawable/bg_header_gradient"
-        app:title="@string/title_add_product"
-        app:navigationContentDescription="@string/nav_back"
+        android:elevation="4dp"
+        app:title="Add Product"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        app:navigationContentDescription="Back"
         app:titleTextColor="@android:color/white"
-        app:navigationIcon="@drawable/ic_arrow_back" />
+        app:titleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="24dp"
-        android:background="@color/background">
+        android:padding="16dp"
+        android:fillViewport="true"
+        android:clipToPadding="false"
+        android:scrollbarThumbVertical="@android:color/darker_gray">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <!-- Product Name Field with Enhanced Styling -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilProductName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 app:boxBackgroundMode="outline"
+                app:boxCornerRadiusTopStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusBottomEnd="12dp"
+                app:boxStrokeWidth="1dp"
+                app:boxStrokeWidthFocused="2dp"
+                app:boxStrokeColor="@color/blue"
                 app:errorEnabled="true"
-                app:boxCornerRadiusTopStart="8dp"
-                app:boxCornerRadiusTopEnd="8dp"
-                app:boxCornerRadiusBottomStart="8dp"
-                app:boxCornerRadiusBottomEnd="8dp">
+                app:placeholderText="e.g., Laptop"
+                app:placeholderTextColor="@color/placeholder_gray"
+                app:startIconDrawable="@drawable/ic_product"
+                app:startIconTint="@color/blue"
+                app:hintTextColor="@color/blue"
+                app:errorTextColor="@color/error_red">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etProductName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/hint_product_name"
-                    android:inputType="textCapWords" />
+                    android:hint="Product Name *"
+                    android:inputType="textCapWords|textAutoCorrect"
+                    android:maxLines="2"
+                    android:padding="12dp"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@color/hint_gray"
+                    android:importantForAutofill="no" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- HSN Code Field (Initially Hidden) -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilHSNCode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:boxBackgroundMode="outline"
-                app:errorEnabled="true"
-                app:boxCornerRadiusTopStart="8dp"
                 android:visibility="gone"
-                app:boxCornerRadiusTopEnd="8dp"
-                app:boxCornerRadiusBottomStart="8dp"
-                app:boxCornerRadiusBottomEnd="8dp">
+                app:boxBackgroundMode="outline"
+                app:boxCornerRadiusTopStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusBottomEnd="12dp"
+                app:boxStrokeWidth="1dp"
+                app:boxStrokeWidthFocused="2dp"
+                app:boxStrokeColor="@color/blue"
+                app:errorEnabled="true"
+                app:startIconDrawable="@drawable/ic_hash"
+                app:startIconTint="@color/blue"
+                app:hintTextColor="@color/blue">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etHSNCode"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/hint_hsn_code"
+                    android:hint="HSN Code"
                     android:inputType="text"
-                    android:maxLength="8" />
+                    android:maxLength="8"
+                    android:padding="12dp"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@color/hint_gray" />
             </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Unit Field with Dropdown -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilUnit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 app:boxBackgroundMode="outline"
-                app:boxCornerRadiusTopStart="8dp"
-                app:boxCornerRadiusTopEnd="8dp"
-                app:boxCornerRadiusBottomStart="8dp"
-                app:boxCornerRadiusBottomEnd="8dp">
+                app:boxCornerRadiusTopStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusBottomEnd="12dp"
+                app:boxStrokeWidth="1dp"
+                app:boxStrokeWidthFocused="2dp"
+                app:boxStrokeColor="@color/blue"
+                app:endIconMode="dropdown_menu"
+                app:endIconTint="@color/blue"
+                app:startIconDrawable="@drawable/ic_unit"
+                app:startIconTint="@color/blue"
+                app:hintTextColor="@color/blue">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <AutoCompleteTextView
                     android:id="@+id/etUnit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/hint_unit"
-                    android:focusable="false"
-                    android:clickable="true"
-                    android:drawableEnd="@drawable/ic_arrow_drop_down"/>
+                    android:hint="Unit *"
+                    android:inputType="none"
+                    android:maxLines="1"
+                    android:padding="12dp"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@color/hint_gray"
+                    android:popupBackground="@android:color/white"
+                    android:importantForAutofill="no" />
             </com.google.android.material.textfield.TextInputLayout>
 
-
+            <!-- Price Field -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilPrice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 app:boxBackgroundMode="outline"
+                app:boxCornerRadiusTopStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusBottomEnd="12dp"
+                app:boxStrokeWidth="1dp"
+                app:boxStrokeWidthFocused="2dp"
+                app:boxStrokeColor="@color/blue"
                 app:errorEnabled="true"
-                app:boxCornerRadiusTopStart="8dp"
-                app:boxCornerRadiusTopEnd="8dp"
-                app:boxCornerRadiusBottomStart="8dp"
-                app:boxCornerRadiusBottomEnd="8dp">
+                app:startIconDrawable="@drawable/ic_currency"
+                app:startIconTint="@color/blue"
+                app:hintTextColor="@color/blue"
+                app:prefixText="₹"
+                app:prefixTextColor="@color/blue">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etPrice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/hint_price"
-                    android:inputType="numberDecimal" />
+                    android:hint="Price *"
+                    android:inputType="numberDecimal"
+                    android:padding="12dp"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@color/hint_gray"
+                    android:importantForAutofill="no" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- GST Rate Field -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilGSTRate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 app:boxBackgroundMode="outline"
+                app:boxCornerRadiusTopStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusBottomEnd="12dp"
+                app:boxStrokeWidth="1dp"
+                app:boxStrokeWidthFocused="2dp"
+                app:boxStrokeColor="@color/blue"
                 app:errorEnabled="true"
-                app:boxCornerRadiusTopStart="8dp"
-                app:boxCornerRadiusTopEnd="8dp"
-                app:boxCornerRadiusBottomStart="8dp"
-                app:boxCornerRadiusBottomEnd="8dp">
+                app:startIconDrawable="@drawable/ic_percent"
+                app:startIconTint="@color/blue"
+                app:hintTextColor="@color/blue"
+                app:suffixText="%"
+                app:suffixTextColor="@color/blue">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etGSTRate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:hint="@string/hint_gst_rate"
-                    android:inputType="numberDecimal" />
+                    android:hint="GST Rate"
+                    android:inputType="numberDecimal"
+                    android:padding="12dp"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@color/hint_gray"
+                    android:importantForAutofill="no" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Stock Quantity Field -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilStockQuantity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
                 app:boxBackgroundMode="outline"
+                app:boxCornerRadiusTopStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusBottomEnd="12dp"
+                app:boxStrokeWidth="1dp"
+                app:boxStrokeWidthFocused="2dp"
+                app:boxStrokeColor="@color/blue"
                 app:errorEnabled="true"
-                app:boxCornerRadiusTopStart="8dp"
-                app:boxCornerRadiusTopEnd="8dp"
-                app:boxCornerRadiusBottomStart="8dp"
-                app:boxCornerRadiusBottomEnd="8dp">
+                app:startIconDrawable="@drawable/ic_stock"
+                app:startIconTint="@color/blue"
+                app:hintTextColor="@color/blue">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etStockQuantity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/hint_stock_qty"
-                    android:inputType="number" />
+                    android:hint="Stock Quantity *"
+                    android:inputType="number"
+                    android:padding="12dp"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@color/hint_gray"
+                    android:importantForAutofill="no" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Dynamic Custom Fields Container with Divider -->
             <LinearLayout
                 android:id="@+id/llCustomFieldsContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" />
+                android:orientation="vertical"
+                android:animateLayoutChanges="true"
+                android:visibility="gone" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSaveProduct"
+            <!-- Buttons Section with Enhanced Styling -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/btn_save_product"
-                android:layout_marginTop="16dp"
-                app:cornerRadius="8dp"
-                android:textAllCaps="false"
-                app:backgroundTint="@color/blue"
-                android:textColor="@android:color/white" />
+                android:orientation="vertical"
+                android:layout_marginTop="16dp">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/customfields"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                <!-- Save Product Button (Primary) with Ripple Effect -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSaveProduct"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="Save Product"
+                    android:textAllCaps="false"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="12dp"
+                    app:backgroundTint="@color/blue"
+                    android:textColor="@android:color/white"
+                    app:icon="@drawable/ic_save"
+                    app:iconGravity="textStart"
+                    app:iconTint="@android:color/white"
+                    app:iconPadding="8dp"
+                    android:stateListAnimator="@null"
+                    android:elevation="4dp"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Manage Custom Fields Button (Outlined) with Ripple -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/customfields"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:text="Manage Custom Fields"
+                    android:textAllCaps="false"
+                    android:textSize="14sp"
+                    android:textStyle="normal"
+                    app:cornerRadius="12dp"
+                    app:strokeColor="@color/blue"
+                    app:strokeWidth="2dp"
+                    android:textColor="@color/blue"
+                    app:icon="@drawable/ic_settings"
+                    app:iconGravity="textStart"
+                    app:iconTint="@color/blue"
+                    app:iconPadding="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:elevation="2dp" />
+            </LinearLayout>
+
+            <!-- Additional bottom padding for better scrolling -->
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/btn_manage_custom_fields"
-                app:backgroundTint="@color/blue"
-                android:layout_marginTop="8dp"
-                app:cornerRadius="8dp"
-                android:textAllCaps="false"
-                android:textColor="@android:color/white" />
+                android:layout_height="16dp" />
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -35,7 +36,7 @@ import java.util.*;
 public class NewProductActivity extends AppCompatActivity {
 
     private TextInputEditText etProductName, etHSNCode, etPrice,
-            etGSTRate, etStockQuantity, etUnit;
+            etGSTRate, etStockQuantity;
     private TextInputLayout tilProductName, tilHSNCode,
             tilPrice, tilGSTRate, tilStockQuantity, tilUnit;
 
@@ -44,7 +45,7 @@ public class NewProductActivity extends AppCompatActivity {
 
     private String userMobile;
     private DatabaseReference productsRef;
-
+    private AutoCompleteTextView  etUnit;
     private List<String> customFields;
     private Map<String, TextInputEditText> customFieldEditTexts;
     private boolean keepDefaultFields;

@@ -8,7 +8,6 @@
     <!-- res/values/colors.xml -->
     <color name="colorPrimary">#6200EE</color>
     <color name="gray">#808080</color>
-    <color name="blue">#3F51B5</color>
 
     <!-- Primary colors -->
     <color name="colorPrimaryDark">#3700B3</color>          <!-- Deep Purple 700 -->
@@ -23,7 +22,6 @@
     <color name="gray_100">#F5F5F5</color>                  <!-- Very Light Gray -->
 
     <!-- Background Colors -->
-    <color name="background">#FFFFFF</color>                 <!-- White Background -->
     <color name="cardBackground">#FAFAFA</color>             <!-- Slightly off white -->
 
     <!-- Other colors -->
@@ -33,7 +31,11 @@
     <color name="tab_unselected">#757575</color>
     <color name="tab_icon_selected">#1565C0</color>
     <color name="tab_icon_unselected">#9E9E9E</color>
-
+    <color name="blue">#2196F3</color>
+    <color name="background">#F5F5F5</color>
+    <color name="hint_gray">#9E9E9E</color>
+    <color name="placeholder_gray">#BDBDBD</color>
+    <color name="error_red">#F44336</color>
 
     <color name="colorSuccess">#4CAF50</color>
 
