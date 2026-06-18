@@ -12,7 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SearchView;
+import androidx.appcompat.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -117,7 +117,7 @@ public class ProductFragment extends Fragment {
         rvProducts = view.findViewById(R.id.rvProducts);
         fabAddProduct = view.findViewById(R.id.fabAddProduct);
         btnImportProducts = view.findViewById(R.id.btnImportProducts);
-        searchView = view.findViewById(R.id.searchView);
+        searchView = (androidx.appcompat.widget.SearchView) view.findViewById(R.id.searchView);
         tvTotalProducts = view.findViewById(R.id.tvTotalProducts);
 
         SharedPreferences prefs = requireActivity().getSharedPreferences("APP_PREFS", Context.MODE_PRIVATE);

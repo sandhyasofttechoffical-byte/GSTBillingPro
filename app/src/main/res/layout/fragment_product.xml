@@ -1,4 +1,5 @@
-<!-- In: res/layout/fragment_product.xml -->
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Professional Product Fragment Layout - Enhanced Design -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -6,110 +7,173 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:fitsSystemWindows="true"
-    android:background="#F5FAFF"
+    android:background="#F8FAFC"
     tools:context=".Fragment.ProductFragment">
 
-    <!-- Search and Product Count -->
+    <!-- Header Section with Professional Spacing -->
     <LinearLayout
         android:id="@+id/header_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:orientation="vertical"
-        android:paddingStart="16dp"
-        android:paddingTop="16dp"
-        android:paddingEnd="16dp">
+        android:paddingStart="20dp"
+        android:paddingTop="20dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="12dp"
+        android:background="@drawable/header_shadow">
 
-        <SearchView
+        <!-- Enhanced SearchView with Material Design -->
+        <androidx.appcompat.widget.SearchView
             android:id="@+id/searchView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edittext_bg"
+            android:layout_height="56dp"
+            android:background="@drawable/search_view_background"
             android:iconifiedByDefault="false"
             android:queryHint="@string/hint_search_products"
-            />
+            android:textColor="#1E293B"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            app:iconTint="#4A6FA5"
+            app:searchIcon="@drawable/ic_search"
+            app:closeIcon="@drawable/ic_close"
+            app:searchHintIcon="@drawable/ic_search"
+            app:queryBackground="@android:color/transparent"
+            android:elevation="2dp" />
 
+        <!-- Professional Product Counter with Badge Style -->
         <TextView
             android:id="@+id/tvTotalProducts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="12dp"
             android:gravity="end"
-            android:textColor="?android:attr/textColorSecondary"
+            android:textColor="#4A6FA5"
+            android:textSize="14sp"
             android:textStyle="bold"
-            tools:text="@string/label_total_products_sample"
- />
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:background="@drawable/counter_background"
+            android:layout_marginBottom="4dp"
+            tools:text="Total Products: 24" />
 
     </LinearLayout>
 
+    <!-- RecyclerView with Professional Scrolling -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvProducts"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/header_layout"
+        android:layout_above="@id/button_container"
         android:clipToPadding="false"
-
-        android:paddingBottom="80dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="16dp"
+        android:scrollbars="vertical"
+        android:scrollbarThumbVertical="@drawable/scrollbar_thumb"
+        android:scrollbarTrackVertical="@drawable/scrollbar_track"
+        android:fadeScrollbars="true"
+        android:overScrollMode="ifContentScrolls"
         tools:listitem="@layout/item_product" />
 
-    <!--
-        This CardView is hidden and only used for its content in the dialog.
-        Its position in the XML file no longer matters visually.
-    -->
+    <!-- Hidden Import Instructions Card - Enhanced Design -->
     <androidx.cardview.widget.CardView
         android:id="@+id/import_instructions_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="16dp"
+        android:layout_above="@id/button_container"
         android:visibility="gone"
-        app:cardBackgroundColor="#F1F1F1"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="2dp"
-        tools:visibility="visible" >
+        app:cardBackgroundColor="#FFFFFF"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="8dp"
+        app:cardPreventCornerOverlap="false"
+        app:contentPadding="0dp"
+        tools:visibility="visible">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="12dp"
-            android:text="@string/import_instructions"
-            android:textColor="@color/black"
-            android:textSize="12sp" />
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:background="@drawable/instruction_card_background">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_info"
+                android:layout_marginEnd="12dp"
+                app:tint="#4A6FA5" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/import_instructions"
+                android:textColor="#1E293B"
+                android:textSize="13sp"
+                android:lineSpacingExtra="4dp"
+                android:textStyle="normal" />
+
+        </LinearLayout>
 
     </androidx.cardview.widget.CardView>
 
-
-    <!--
-       CHANGE 2:
-       The buttons are now floating over the RecyclerView because they are
-       drawn on top of it within the RelativeLayout.
-   -->
-    <!-- Import Button -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnImportProducts"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="25dp"
-        android:backgroundTint="@color/blue"
-        android:text="@string/btn_import"
-        app:icon="@android:drawable/stat_sys_upload" />
-
-    <!-- Add Product FAB -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAddProduct"
-        android:layout_width="wrap_content"
+    <!-- Button Container for Proper Alignment -->
+    <LinearLayout
+        android:id="@+id/button_container"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="16dp"
         android:layout_marginBottom="25dp"
-        android:backgroundTint="@color/blue"
-        android:contentDescription="@string/desc_add_product"
-        android:src="@android:drawable/ic_input_add"
-        app:tint="@android:color/white" />
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:clipToPadding="false">
+
+        <!-- Import Button - Professional Style -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnImportProducts"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="12dp"
+            android:backgroundTint="@color/blue"
+            android:text="@string/btn_import"
+            android:textAllCaps="false"
+            android:textSize="15sp"
+            android:textColor="@android:color/white"
+            app:icon="@drawable/ic_import"
+            app:iconGravity="textStart"
+            app:iconTint="@android:color/white"
+            app:iconPadding="8dp"
+            app:cornerRadius="26dp"
+            android:stateListAnimator="@null"
+            app:rippleColor="#33FFFFFF"
+            android:elevation="4dp" />
+
+        <!-- Add Product FAB - Professional Style -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabAddProduct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:backgroundTint="@color/blue"
+            android:contentDescription="@string/desc_add_product"
+            android:src="@drawable/ic_add"
+            app:tint="@android:color/white"
+            app:fabSize="normal"
+            app:borderWidth="0dp"
+            app:rippleColor="#33FFFFFF"
+            android:clickable="true"
+            android:focusable="true"
+            android:elevation="6dp" />
+
+    </LinearLayout>
 
 </RelativeLayout>
