@@ -189,12 +189,9 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
     private void showEditDialog() {
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_edit_product, null);
-        Aler
-
-
-
-
-        tDialog dialog = new AlertDialog.Builder(this).setView(dialogView).create();
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setView(dialogView)
+                .create();
 
         LinearLayout llDefaultFieldsContainer = dialogView.findViewById(R.id.llDefaultFieldsContainer);
         LinearLayout llCustomFieldsContainer = dialogView.findViewById(R.id.llCustomFieldsContainer);
