@@ -110,7 +110,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:background="@color/white"
-                        android:padding="20dp">
+                        android:padding="10dp">
 
                         <TextView
                             android:id="@+id/tvSalesLabel"
@@ -160,7 +160,7 @@
                         android:layout_height="wrap_content"
                         android:background="@color/white"
                         android:orientation="vertical"
-                        android:padding="20dp">
+                        android:padding="10dp">
 
                         <TextView
                             android:id="@+id/tvReceivedLabel"
@@ -209,7 +209,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:background="@color/white"
-                        android:padding="20dp">
+                        android:padding="10dp">
 
                         <TextView
                             android:id="@+id/tvPendingLabel"
@@ -258,7 +258,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:background="@color/white"
-                        android:padding="20dp">
+                        android:padding="10dp">
 
                         <TextView
 

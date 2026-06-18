@@ -10,9 +10,9 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@drawable/logo"
-        android:label="@string/app_name"
-        android:roundIcon="@drawable/logo"
+        android:icon="@drawable/fixlogo"
+        android:label="GSTBillingPro"
+        android:roundIcon="@drawable/fixlogo"
         android:supportsRtl="true"
         android:theme="@style/Theme.GSTBIllingPro">
         <activity

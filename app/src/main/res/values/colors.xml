@@ -25,7 +25,15 @@
     <!-- Background Colors -->
     <color name="background">#FFFFFF</color>                 <!-- White Background -->
     <color name="cardBackground">#FAFAFA</color>             <!-- Slightly off white -->
-
+    <color name="blue_primary">#1565C0</color>
+    <color name="blue_primary_dark">#0D47A1</color>
+    <color name="blue_light">#42A5F5</color>
+    <color name="blue_accent_bg">#E3F2FD</color>
+    <color name="blue_soft">#BBDEFB</color>
+    <color name="off_white">#F4F7FB</color>
+    <color name="text_dark">#1A1F36</color>
+    <color name="text_grey">#6B7280</color>
+    <color name="divider_grey">#E5E9F0</color>
     <!-- Other colors -->
     <color name="error">#B00020</color>
 

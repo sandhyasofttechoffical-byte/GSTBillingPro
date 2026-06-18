@@ -1425,7 +1425,7 @@ private File generatedPdfFile = null;
     private String getBusinessName() {
         // Try to get from SharedPreferences or Firebase
         String name = getSharedPreferences("APP_PREFS", MODE_PRIVATE)
-                .getString("BUSINESS_NAME", "GST Billing Pro");
+                .getString("BUSINESS_NAME", "श्री स्वामी समर्थ ट्रेडर्स");
         return name;
     }
 
