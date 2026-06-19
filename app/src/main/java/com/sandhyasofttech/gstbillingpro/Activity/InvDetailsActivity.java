@@ -3,14 +3,18 @@ package com.sandhyasofttech.gstbillingpro.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,8 +32,6 @@ import java.util.Locale;
 
 public class InvDetailsActivity extends AppCompatActivity {
 
-    // Header Views
-    TextView tvBusinessName, tvBusinessAddress, tvBusinessGstin;
 
     // Invoice Info Views
     TextView tvInvoiceNo, tvCustomerName, tvInvoiceDate, tvCustomerPhone;
@@ -59,7 +61,11 @@ public class InvDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inv_detailss);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(ContextCompat.getColor(this, R.color.blue_primary));
+        }
         String invoiceNumber = getIntent().getStringExtra("invoiceNumber");
         String mobile = getSharedPreferences("APP_PREFS", MODE_PRIVATE)
                 .getString("USER_MOBILE", "");
@@ -115,11 +121,6 @@ public class InvDetailsActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        // Header
-        tvBusinessName = findViewById(R.id.tvBusinessName);
-        tvBusinessAddress = findViewById(R.id.tvBusinessAddress);
-        tvBusinessGstin = findViewById(R.id.tvBusinessGstin);
-
         // Invoice Info
         tvInvoiceNo = findViewById(R.id.tvInvoiceNo);
         tvCustomerName = findViewById(R.id.tvCustomerName);
@@ -156,19 +157,6 @@ public class InvDetailsActivity extends AppCompatActivity {
         invoiceRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot s) {
-                // Business Details
-                String businessName = s.child("businessName").getValue(String.class);
-                String businessAddress = s.child("businessAddress").getValue(String.class);
-                String gstin = s.child("businessGstin").getValue(String.class);
-
-                tvBusinessName.setText(businessName != null ? businessName : "Business Name");
-                tvBusinessAddress.setText(businessAddress != null ? businessAddress : "Address");
-
-                if (gstin != null && !gstin.isEmpty()) {
-                    tvBusinessGstin.setVisibility(View.VISIBLE);
-                    tvBusinessGstin.setText("GSTIN: " + gstin);
-                }
-
                 // Invoice Details
                 String invoiceNo = s.child("invoiceNumber").getValue(String.class);
                 String customerName = s.child("customerName").getValue(String.class);

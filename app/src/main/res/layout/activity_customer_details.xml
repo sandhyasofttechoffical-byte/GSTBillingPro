@@ -13,7 +13,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/blue"
+        android:background="@drawable/bg_header_gradient"
         app:titleTextColor="@android:color/white"
         app:navigationIcon="@drawable/ic_arrow_back" />
 

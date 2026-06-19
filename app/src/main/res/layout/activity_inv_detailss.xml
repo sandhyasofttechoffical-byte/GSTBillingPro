@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:padding="20dp">
+                android:padding="10dp">
 
                 <!-- Back Button -->
                 <ImageButton
@@ -40,44 +40,15 @@
                     android:layout_marginEnd="8dp" />
 
                 <!-- Business Info -->
-                <LinearLayout
+                <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <!-- Business Name -->
-                    <TextView
-                        android:id="@+id/tvBusinessName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Patil Hardware"
-                        android:textSize="22sp"
-                        android:textStyle="bold"
-                        android:textColor="#FFFFFF" />
-
-                    <!-- Address -->
-                    <TextView
-                        android:id="@+id/tvBusinessAddress"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Business Address"
-                        android:textSize="13sp"
-                        android:textColor="#E3F2FD"
-                        android:layout_marginTop="4dp" />
-
-                    <!-- GSTIN -->
-                    <TextView
-                        android:id="@+id/tvBusinessGstin"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="GSTIN: 27XXXXX"
-                        android:textSize="12sp"
-                        android:textColor="#E3F2FD"
-                        android:layout_marginTop="2dp"
-                        android:visibility="gone" />
-
-                </LinearLayout>
+                    android:text="Invoice Details"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF"
+                    android:gravity="center_vertical"/>
 
                 <!-- Action Buttons -->
                 <LinearLayout

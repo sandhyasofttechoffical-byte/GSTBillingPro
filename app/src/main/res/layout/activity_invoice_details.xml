@@ -8,13 +8,14 @@
     android:background="#F8F9FA">
 
     <!-- Toolbar -->
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/blue"
-        app:titleTextColor="@android:color/white"
-        app:navigationIcon="@drawable/ic_arrow_back" />
+        android:background="@drawable/bg_header_gradient"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        app:titleTextColor="@android:color/white" />
 
     <ScrollView
         android:layout_width="match_parent"
