@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -35,6 +36,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private Product product;
     private DatabaseReference productRef;
     private TextView tvProductInitial;
+    // Add this field at the top of the class
+    private TextView tvProductName;
     private TextView tvProductId;
     private TextView tvCustomerPhone;
     @Override
@@ -51,7 +54,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
         tvProductInitial = findViewById(R.id.tvProductInitial);
         tvProductId = findViewById(R.id.tvProductId);
         tvCustomerPhone = findViewById(R.id.tvCustomerPhone);
-
+// In onCreate(), after tvCustomerPhone = findViewById(...)
+        tvProductName = findViewById(R.id.tvProductName);
         product = (Product) getIntent().getSerializableExtra("product");
 
 // Add null check
@@ -71,10 +75,12 @@ public class ProductDetailsActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         displayProductDetails();
+
+        // Staggered entrance animation for the section cards + edit button
+        playEntranceAnimations();
     }
 
     private void displayProductDetails() {
-        // Initialize views
         CardView cvCustomer = findViewById(R.id.cvCustomer);
         TextView tvCustomerName = findViewById(R.id.tvCustomerName);
         LinearLayout llDefaultFieldsContainer = findViewById(R.id.llDefaultFieldsContainer);
@@ -82,28 +88,24 @@ public class ProductDetailsActivity extends AppCompatActivity {
         CardView cvDefaultFields = findViewById(R.id.cvDefaultFields);
         CardView cvCustomFields = findViewById(R.id.cvCustomFields);
 
-        // STEP 3.1: Set Product Initial (first letter)
-        if (product != null && product.getName() != null && !product.getName().isEmpty()) {
+        // ── Header card ──────────────────────────────────────────────
+        if (product.getName() != null && !product.getName().isEmpty()) {
             tvProductInitial.setText(String.valueOf(product.getName().charAt(0)).toUpperCase());
+            tvProductName.setText(product.getName());   // ← was never set before
         }
 
-        // STEP 3.2: Set Product ID (shortened version)
-        if (product != null && product.getProductId() != null) {
+        if (product.getProductId() != null) {
             String shortId = product.getProductId();
-            if (shortId.length() > 8) {
-                shortId = shortId.substring(0, 8);
-            }
+            if (shortId.length() > 8) shortId = shortId.substring(0, 8);
             tvProductId.setText("ID: " + shortId);
         }
+        // ─────────────────────────────────────────────────────────────
 
-        // STEP 3.3: Customer Information
-        if (product != null && !TextUtils.isEmpty(product.getCustomerName())) {
+        // Customer card
+        if (!TextUtils.isEmpty(product.getCustomerName())) {
             cvCustomer.setVisibility(View.VISIBLE);
             tvCustomerName.setText(product.getCustomerName());
-
-            // Set customer phone (you'll need to add this to your Product model)
-            // For now, hide it or show placeholder
-            tvCustomerPhone.setVisibility(View.GONE); // Hide until you add to model
+            tvCustomerPhone.setVisibility(View.GONE);
         } else {
             cvCustomer.setVisibility(View.GONE);
         }
@@ -112,25 +114,31 @@ public class ProductDetailsActivity extends AppCompatActivity {
         llDefaultFieldsContainer.removeAllViews();
         llCustomFieldsContainer.removeAllViews();
 
-        // STEP 3.4: Default Fields
-        boolean hasDefaultData = product != null && product.getPrice() > 0;
+        // ── Default fields — show if name exists, not just price > 0 ──
+        boolean hasDefaultData = product.getName() != null && !product.getName().isEmpty();
         cvDefaultFields.setVisibility(hasDefaultData ? View.VISIBLE : View.GONE);
 
         if (hasDefaultData) {
-            addDetailRow(llDefaultFieldsContainer, "HSN/SAC Code",
-                    product.getHsnCode() != null ? product.getHsnCode() : "-");
-            addDetailRow(llDefaultFieldsContainer, "Price",
-                    String.format("₹%.2f", product.getPrice()));
-            addDetailRow(llDefaultFieldsContainer, "GST Rate",
-                    String.format("%.1f%%", product.getGstRate()));
-
+            // Re-add the section title header since removeAllViews() wiped it
+            // Add rows below the static header that stays in XML
+            if (!TextUtils.isEmpty(product.getHsnCode())) {
+                addDetailRow(llDefaultFieldsContainer, "HSN/SAC Code", product.getHsnCode());
+            }
+            if (product.getPrice() > 0) {
+                addDetailRow(llDefaultFieldsContainer, "Price",
+                        String.format("₹%.2f", product.getPrice()));
+                addDetailRow(llDefaultFieldsContainer, "GST Rate",
+                        String.format("%.1f%%", product.getGstRate()));
+            }
             String quantityText = product.getStockQuantity() + " " +
-                    (product.getUnit() != null ? product.getUnit() : "pcs");
+                    (product.getUnit() != null && !product.getUnit().isEmpty()
+                            ? product.getUnit() : "pcs");
             addDetailRow(llDefaultFieldsContainer, "Stock Quantity", quantityText);
         }
+        // ─────────────────────────────────────────────────────────────
 
-        // STEP 3.5: Custom Fields
-        if (product != null && product.getCustomFields() != null && !product.getCustomFields().isEmpty()) {
+        // Custom fields
+        if (product.getCustomFields() != null && !product.getCustomFields().isEmpty()) {
             cvCustomFields.setVisibility(View.VISIBLE);
             for (Map.Entry<String, String> entry : product.getCustomFields().entrySet()) {
                 addDetailRow(llCustomFieldsContainer, entry.getKey(),
@@ -139,8 +147,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
         } else {
             cvCustomFields.setVisibility(View.GONE);
         }
-    }
-    private void addDetailRow(LinearLayout container, String label, String value) {
+    }    private void addDetailRow(LinearLayout container, String label, String value) {
         View rowView = LayoutInflater.from(this).inflate(R.layout.item_detail_row, container, false);
         TextView tvLabel = rowView.findViewById(R.id.tvLabel);
         TextView tvValue = rowView.findViewById(R.id.tvValue);
@@ -157,6 +164,35 @@ public class ProductDetailsActivity extends AppCompatActivity {
         rowView.setLayoutParams(params);
 
         container.addView(rowView);
+    }
+
+    /**
+     * Plays a staggered fade + slide-up entrance animation across the four
+     * section cards, followed by a pop-in animation on the Edit button.
+     * Purely cosmetic — does not touch any existing view IDs or logic.
+     */
+    private void playEntranceAnimations() {
+        View cardHeader = findViewById(R.id.cvProductHeader);
+        View cardCustomer = findViewById(R.id.cvCustomer);
+        View cardDefaultFields = findViewById(R.id.cvDefaultFields);
+        View cardCustomFields = findViewById(R.id.cvCustomFields);
+        View editButton = findViewById(R.id.btnEditProduct);
+
+        if (cardHeader != null) {
+            cardHeader.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_card_1));
+        }
+        if (cardCustomer != null && cardCustomer.getVisibility() == View.VISIBLE) {
+            cardCustomer.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_card_2));
+        }
+        if (cardDefaultFields != null && cardDefaultFields.getVisibility() == View.VISIBLE) {
+            cardDefaultFields.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_card_3));
+        }
+        if (cardCustomFields != null && cardCustomFields.getVisibility() == View.VISIBLE) {
+            cardCustomFields.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_pd_card_4));
+        }
+        if (editButton != null) {
+            editButton.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_button_pop));
+        }
     }
 
     @Override

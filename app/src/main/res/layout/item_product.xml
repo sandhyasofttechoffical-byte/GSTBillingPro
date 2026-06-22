@@ -5,40 +5,64 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginEnd="16dp"
-    android:layout_marginTop="8dp"
-    android:layout_marginBottom="8dp"
-    android:fitsSystemWindows="true"
-    app:cardCornerRadius="16dp"
-    app:cardBackgroundColor="@color/white"
-    app:cardElevation="4dp"
-    app:strokeWidth="1dp"
-    app:strokeColor="#E8EFF5"
+    android:layout_marginStart="2dp"
+    android:layout_marginEnd="2dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="6dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
     android:stateListAnimator="@null"
-    app:rippleColor="#1A4A6FA5">
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="1dp"
+    app:rippleColor="#1A0D2137"
+    app:strokeColor="#EEF1F5"
+    app:strokeWidth="1dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:background="@drawable/card_highlight">
+        android:paddingStart="12dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="10dp">
 
-        <!-- Product Icon/Initial -->
-        <TextView
-            android:id="@+id/tvProductInitial"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:gravity="center"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            android:background="@drawable/product_initial_bg"
-            android:layout_marginEnd="12dp"
+        <!-- Avatar -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardAvatar"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            tools:text="P" />
+            app:strokeWidth="0dp">
+
+            <TextView
+                android:id="@+id/tvProductInitial"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/product_initial_bg"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:text="P" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Stock dot -->
+        <View
+            android:id="@+id/viewStockDot"
+            android:layout_width="11dp"
+            android:layout_height="11dp"
+
+            android:background="@drawable/bg_success_gradient"
+            app:layout_constraintBottom_toBottomOf="@+id/cardAvatar"
+            app:layout_constraintEnd_toEndOf="@+id/cardAvatar" />
 
         <!-- Product Name -->
         <TextView
@@ -46,95 +70,99 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:layout_marginEnd="8dp"
             android:ellipsize="end"
+            android:fontFamily="sans-serif-medium"
+            android:lineSpacingExtra="1dp"
             android:maxLines="2"
-            android:textColor="#1E293B"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:lineSpacingExtra="2dp"
-            app:layout_constraintStart_toEndOf="@+id/tvProductInitial"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/ivForwardArrow"
+            android:textColor="#0D2137"
+            android:textSize="14.5sp"
+            app:layout_constraintEnd_toStartOf="@+id/cardArrow"
+            app:layout_constraintStart_toEndOf="@+id/cardAvatar"
+            app:layout_constraintTop_toTopOf="@+id/cardAvatar"
             tools:text="Premium Insulated Water Bottle" />
 
-        <!-- Stock Label with Icon -->
+        <!-- Meta row -->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/layoutMetaRow"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="6dp"
             android:gravity="center_vertical"
-            android:layout_marginTop="4dp"
-            app:layout_constraintTop_toBottomOf="@+id/tvProductName"
-            app:layout_constraintStart_toStartOf="@+id/tvProductName"
-            app:layout_constraintBottom_toBottomOf="parent">
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="@+id/cardAvatar"
+            app:layout_constraintEnd_toStartOf="@+id/cardArrow"
+            app:layout_constraintStart_toEndOf="@+id/cardAvatar"
+            app:layout_constraintTop_toBottomOf="@+id/tvProductName">
 
             <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_marginEnd="3dp"
                 android:src="@drawable/ic_stock_small"
-                app:tint="#6B7B8F"
-                android:layout_marginEnd="4dp" />
+                app:tint="#5B7088" />
 
             <TextView
                 android:id="@+id/tvQuantityLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
                 android:text="Stock"
-                android:textColor="#6B7B8F"
+                android:textColor="#5B7088"
                 android:textSize="13sp" />
 
             <TextView
                 android:id="@+id/tvQuantity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:textColor="#1E293B"
+                android:layout_marginStart="3dp"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="#0D2137"
                 android:textSize="13sp"
                 android:textStyle="bold"
                 tools:text="120" />
 
+            <TextView
+                android:id="@+id/tvPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/price_badge"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="3dp"
+                android:textColor="#0D2137"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:text="₹499"
+                tools:visibility="visible" />
+
         </LinearLayout>
 
-        <!-- Forward Arrow with Circle Background -->
+        <!-- Arrow -->
         <com.google.android.material.card.MaterialCardView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            app:cardCornerRadius="20dp"
-            app:cardBackgroundColor="#F1F5F9"
+            android:id="@+id/cardArrow"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            app:cardBackgroundColor="#F2F5F8"
+            app:cardCornerRadius="16dp"
             app:cardElevation="0dp"
-            app:strokeWidth="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:strokeWidth="0dp">
 
             <ImageView
                 android:id="@+id/ivForwardArrow"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_chevron_right"
-                app:tint="#4A6FA5" />
+                app:tint="#0D2137" />
 
         </com.google.android.material.card.MaterialCardView>
-
-        <!-- Price Badge (Optional Enhancement) -->
-        <TextView
-            android:id="@+id/tvPrice"
-            android:layout_width="wrap_content"
-            android:layout_height="24dp"
-            android:gravity="center"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF"
-            android:background="@drawable/price_badge"
-            android:paddingHorizontal="10dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/ivForwardArrow"
-            android:layout_marginEnd="8dp"
-            tools:text="₹499"
-            tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

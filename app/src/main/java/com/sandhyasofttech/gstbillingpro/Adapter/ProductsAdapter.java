@@ -2,6 +2,7 @@ package com.sandhyasofttech.gstbillingpro.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,13 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
 
     private List<Product> productList;
 
+    // Distinct colors for avatar backgrounds
+    private static final int[] AVATAR_COLORS = {
+            0xFF4A6FA5, 0xFF7C3AED, 0xFF059669,
+            0xFFDB2777, 0xFFD97706, 0xFF0891B2,
+            0xFFDC2626, 0xFF65A30D, 0xFF7C3AED
+    };
+
     public ProductsAdapter(List<Product> productList) {
         this.productList = productList;
     }
@@ -35,23 +43,33 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
 
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
-
         Product product = productList.get(position);
 
+        // Product name
         holder.tvName.setText(product.getName());
 
-        // ✅ Quantity + Unit
+        // ── Initial badge ──────────────────────────────────────────
+        String name = product.getName();
+        String initial = (name != null && !name.isEmpty())
+                ? String.valueOf(name.charAt(0)).toUpperCase()
+                : "?";
+        holder.tvProductInitial.setText(initial);
+
+        // Pick a color deterministically from the name so it's stable across scrolls
+        int colorIndex = (name != null && !name.isEmpty())
+                ? Math.abs(name.hashCode()) % AVATAR_COLORS.length
+                : 0;
+        holder.tvProductInitial.setBackgroundColor(AVATAR_COLORS[colorIndex]);
+        // ──────────────────────────────────────────────────────────
+
+        // Quantity + Unit
         String unit = product.getUnit();
-        String qtyText;
-
-        if (unit != null && !unit.isEmpty()) {
-            qtyText = product.getEffectiveQuantity() + " " + unit;
-        } else {
-            qtyText = String.valueOf(product.getEffectiveQuantity());
-        }
-
+        String qtyText = (unit != null && !unit.isEmpty())
+                ? product.getEffectiveQuantity() + " " + unit
+                : String.valueOf(product.getEffectiveQuantity());
         holder.tvQuantity.setText(qtyText);
 
+        // Click → ProductDetailsActivity
         holder.itemView.setOnClickListener(v -> {
             Context context = holder.itemView.getContext();
             Intent intent = new Intent(context, ProductDetailsActivity.class);
@@ -67,14 +85,15 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
 
     static class ProductViewHolder extends RecyclerView.ViewHolder {
 
-        TextView tvName, tvQuantity;
+        TextView tvName, tvQuantity, tvProductInitial;
         ImageView ivForwardArrow;
 
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvName = itemView.findViewById(R.id.tvProductName);
-            tvQuantity = itemView.findViewById(R.id.tvQuantity);
-            ivForwardArrow = itemView.findViewById(R.id.ivForwardArrow);
+            tvName           = itemView.findViewById(R.id.tvProductName);
+            tvQuantity       = itemView.findViewById(R.id.tvQuantity);
+            tvProductInitial = itemView.findViewById(R.id.tvProductInitial);  // ← was missing
+            ivForwardArrow   = itemView.findViewById(R.id.ivForwardArrow);
         }
     }
 }

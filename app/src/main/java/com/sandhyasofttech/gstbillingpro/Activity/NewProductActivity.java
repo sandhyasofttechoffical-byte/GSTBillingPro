@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AnimationUtils;
 import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -46,6 +47,7 @@ public class NewProductActivity extends AppCompatActivity {
 
     private MaterialButton btnSaveProduct, btnAddYours;
     private LinearLayout llCustomFieldsContainer;
+    private LinearLayout cardCustomFields;
 
     private String userMobile;
     private DatabaseReference productsRef;
@@ -85,6 +87,7 @@ public class NewProductActivity extends AppCompatActivity {
         btnSaveProduct = findViewById(R.id.btnSaveProduct);
         btnAddYours = findViewById(R.id.customfields);
         llCustomFieldsContainer = findViewById(R.id.llCustomFieldsContainer);
+        cardCustomFields = findViewById(R.id.cardCustomFields);
 
         SharedPreferences prefs = getSharedPreferences("APP_PREFS", MODE_PRIVATE);
         userMobile = prefs.getString("USER_MOBILE", null);
@@ -106,6 +109,9 @@ public class NewProductActivity extends AppCompatActivity {
 
         btnAddYours.setOnClickListener(v ->
                 startActivity(new Intent(this, CustomFieldsActivity.class)));
+
+        // Staggered entrance animation for the section cards + buttons
+        playEntranceAnimations();
     }
 
     private void loadCustomFields(SharedPreferences prefs) {
@@ -184,6 +190,42 @@ public class NewProductActivity extends AppCompatActivity {
             til.setHint(field);
             llCustomFieldsContainer.addView(til);
             customFieldEditTexts.put(field, et);
+        }
+
+        // Show the Custom Fields card only when there's at least one field to display,
+        // since an empty card with just a header would look broken.
+        if (cardCustomFields != null) {
+            cardCustomFields.setVisibility(customFields.isEmpty() ? View.GONE : View.VISIBLE);
+        }
+    }
+
+    /**
+     * Plays a staggered fade + slide-up entrance animation across the
+     * Product Info, Pricing & Tax, and Stock cards, followed by the
+     * button group. The Custom Fields card animates in the same wave
+     * as Stock when visible, since it sits directly below it. Purely
+     * cosmetic — does not touch any existing view IDs or logic.
+     */
+    private void playEntranceAnimations() {
+        View cardProductInfo = findViewById(R.id.cardProductInfo);
+        View cardPricingTax = findViewById(R.id.cardPricingTax);
+        View cardStock = findViewById(R.id.cardStock);
+        View buttonGroup = findViewById(R.id.buttonGroup);
+
+        if (cardProductInfo != null) {
+            cardProductInfo.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_card_1));
+        }
+        if (cardPricingTax != null) {
+            cardPricingTax.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_card_2));
+        }
+        if (cardStock != null) {
+            cardStock.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_card_3));
+        }
+        if (cardCustomFields != null && cardCustomFields.getVisibility() == View.VISIBLE) {
+            cardCustomFields.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_card_3));
+        }
+        if (buttonGroup != null) {
+            buttonGroup.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_button_pop));
         }
     }
 

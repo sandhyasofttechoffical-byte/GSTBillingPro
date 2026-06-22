@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8FAFC"
+    android:background="@color/off_white"
     android:fitsSystemWindows="true"
     tools:context=".Activity.ProductDetailsActivity">
 
@@ -30,13 +30,14 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/off_white"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="#F8FAFC"
+            android:background="@color/off_white"
             android:padding="20dp">
 
             <!-- Product Header Card with Icon -->
@@ -82,7 +83,7 @@
                             android:layout_height="wrap_content"
                             android:textSize="20sp"
                             android:textStyle="bold"
-                            android:textColor="#1E293B"
+                            android:textColor="@color/text_dark"
                             android:lineSpacingExtra="4dp"
                             tools:text="Premium Insulated Water Bottle" />
 
@@ -91,7 +92,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="13sp"
-                            android:textColor="#6B7B8F"
+                            android:textColor="@color/text_grey"
                             android:layout_marginTop="4dp"
                             tools:text="ID: PROD-001" />
 
@@ -110,8 +111,7 @@
                 app:cardCornerRadius="20dp"
                 app:cardElevation="2dp"
                 app:cardBackgroundColor="@color/white"
-                app:strokeWidth="1dp"
-                app:strokeColor="#E2E8F0">
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -127,20 +127,27 @@
                         android:gravity="center_vertical"
                         android:layout_marginBottom="16dp">
 
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_customer"
-                            app:tint="#4A6FA5"
-                            android:layout_marginEnd="8dp" />
+                        <FrameLayout
+                            android:layout_width="34dp"
+                            android:layout_height="34dp"
+                            android:background="@drawable/bg_icon_badge">
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_customer"
+                                app:tint="@color/blue_primary" />
+                        </FrameLayout>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
                             android:text="Customer Information"
-                            android:textSize="16sp"
+                            android:textSize="15sp"
                             android:textStyle="bold"
-                            android:textColor="#1E293B" />
+                            android:textColor="@color/text_dark" />
 
                     </LinearLayout>
 
@@ -150,7 +157,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
-                        android:background="#F8FAFC"
+                        android:background="@drawable/bg_detail_row"
                         android:padding="12dp"
                         android:layout_marginBottom="8dp">
 
@@ -159,7 +166,7 @@
                             android:layout_height="wrap_content"
                             android:text="Name:"
                             android:textSize="14sp"
-                            android:textColor="#6B7B8F" />
+                            android:textColor="@color/text_grey" />
 
                         <TextView
                             android:id="@+id/tvCustomerName"
@@ -167,7 +174,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:textSize="15sp"
-                            android:textColor="#1E293B"
+                            android:textColor="@color/text_dark"
                             tools:text="John Doe" />
 
                     </LinearLayout>
@@ -177,7 +184,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
-                        android:background="#F8FAFC"
+                        android:background="@drawable/bg_detail_row"
                         android:padding="12dp">
 
                         <TextView
@@ -185,7 +192,7 @@
                             android:layout_height="wrap_content"
                             android:text="Phone:"
                             android:textSize="14sp"
-                            android:textColor="#6B7B8F" />
+                            android:textColor="@color/text_grey" />
 
                         <TextView
                             android:id="@+id/tvCustomerPhone"
@@ -193,7 +200,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:textSize="15sp"
-                            android:textColor="#1E293B"
+                            android:textColor="@color/text_dark"
                             tools:text="+91 98765 43210" />
 
                     </LinearLayout>
@@ -211,8 +218,7 @@
                 app:cardCornerRadius="20dp"
                 app:cardElevation="2dp"
                 app:cardBackgroundColor="@color/white"
-                app:strokeWidth="1dp"
-                app:strokeColor="#E2E8F0">
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:id="@+id/llDefaultFieldsContainer"
@@ -229,20 +235,27 @@
                         android:gravity="center_vertical"
                         android:layout_marginBottom="16dp">
 
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_product_info"
-                            app:tint="#4A6FA5"
-                            android:layout_marginEnd="8dp" />
+                        <FrameLayout
+                            android:layout_width="34dp"
+                            android:layout_height="34dp"
+                            android:background="@drawable/bg_icon_badge">
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_product_info"
+                                app:tint="@color/blue_primary" />
+                        </FrameLayout>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
                             android:text="Product Information"
-                            android:textSize="16sp"
+                            android:textSize="15sp"
                             android:textStyle="bold"
-                            android:textColor="#1E293B" />
+                            android:textColor="@color/text_dark" />
 
                     </LinearLayout>
 
@@ -261,8 +274,7 @@
                 app:cardCornerRadius="20dp"
                 app:cardElevation="2dp"
                 app:cardBackgroundColor="@color/white"
-                app:strokeWidth="1dp"
-                app:strokeColor="#E2E8F0">
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:id="@+id/llCustomFieldsContainer"
@@ -279,20 +291,27 @@
                         android:gravity="center_vertical"
                         android:layout_marginBottom="16dp">
 
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_custom_fields"
-                            app:tint="#4A6FA5"
-                            android:layout_marginEnd="8dp" />
+                        <FrameLayout
+                            android:layout_width="34dp"
+                            android:layout_height="34dp"
+                            android:background="@drawable/bg_icon_badge">
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_custom_fields"
+                                app:tint="@color/blue_primary" />
+                        </FrameLayout>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
                             android:text="Additional Details"
-                            android:textSize="16sp"
+                            android:textSize="15sp"
                             android:textStyle="bold"
-                            android:textColor="#1E293B" />
+                            android:textColor="@color/text_dark" />
 
                     </LinearLayout>
 
@@ -309,18 +328,24 @@
                 android:layout_height="56dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="20dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                app:backgroundTint="@null"
+                android:background="@drawable/bg_button_selector"
+                app:cornerRadius="28dp"
+                app:rippleColor="@color/blue_soft"
+                android:visibility="gone"
+                app:elevation="4dp"
+                android:stateListAnimator="@null"
                 android:text="Edit Product"
                 android:textAllCaps="false"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="@android:color/white"
-                app:cornerRadius="28dp"
-                app:backgroundTint="#4A6FA5"
                 app:icon="@drawable/ic_edit"
                 app:iconGravity="textStart"
                 app:iconTint="@android:color/white"
-                app:iconPadding="8dp"
-                android:elevation="4dp" />
+                app:iconPadding="8dp" />
 
         </LinearLayout>
 
