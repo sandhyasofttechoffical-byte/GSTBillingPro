@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths xmlns:android="http://schemas.android.com/apk/res/android">
+
     <external-files-path
         name="gst_pdfs"
         path="GSTBillingPDFs" />
+
     <files-path
         name="invoices"
         path="Invoices" />
-    <external-files-path name="documents" path="Documents/" />
+
+    <external-files-path
+        name="documents"
+        path="Documents/" />
+
+    <!-- Add this for CustomerReportActivity PDFs -->
+    <external-files-path
+        name="gst_reports"
+        path="GSTReports/" />
+
 </paths>

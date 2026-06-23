@@ -5,11 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-
-
-    >
-
+    android:fitsSystemWindows="true">
     <!-- Top Bar -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -90,7 +86,18 @@
                 android:textColor="#0D47A1"
                 android:paddingVertical="12dp"
                 android:layout_marginTop="16dp"/>
-
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCustomerWiseReport"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Customer Wise Reports"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                app:icon="@drawable/ic_customer"
+                app:iconPadding="8dp"
+                app:iconTint="#0D47A1"
+                android:textColor="#0D47A1"
+                android:paddingVertical="12dp"
+                android:layout_marginTop="16dp"/>
             <TextView
                 android:id="@+id/tvStatus"
                 android:layout_width="match_parent"
