@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -34,6 +36,7 @@ public class CustomerFragment extends Fragment {
     private RecyclerView recyclerView;
     private FloatingActionButton fabAddCustomer;
     private SearchView searchView;
+    private LinearLayout emptyStateView;
 
     private CustomerAdapter adapter;
     private final List<Customer> customersList = new ArrayList<>();
@@ -47,6 +50,7 @@ public class CustomerFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerViewCustomers);
         fabAddCustomer = view.findViewById(R.id.fabAddCustomer);
         searchView = view.findViewById(R.id.searchViewCustomer);
+        emptyStateView = view.findViewById(R.id.emptyStateView);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
@@ -93,11 +97,14 @@ public class CustomerFragment extends Fragment {
         fabAddCustomer.setOnClickListener(v -> startActivity(new Intent(getActivity(), AddCustomerActivity.class)));
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override public boolean onQueryTextSubmit(String query) {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
                 adapter.getFilter().filter(query);
                 return true;
             }
-            @Override public boolean onQueryTextChange(String newText) {
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
                 adapter.getFilter().filter(newText);
                 return true;
             }
@@ -120,12 +127,44 @@ public class CustomerFragment extends Fragment {
                         temp.add(c);
                     }
                 }
+
+                // Update adapter with data
                 adapter.updateData(temp);
+
+                // Update empty state based on data size
+                updateEmptyState(temp.isEmpty());
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getContext(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                // Show empty state on error
+                updateEmptyState(true);
+            }
+        });
+    }
+
+    /**
+     * Updates the visibility of RecyclerView and Empty State View
+     * @param isEmpty true if no customers available
+     */
+    private void updateEmptyState(boolean isEmpty) {
+        if (getActivity() == null) return;
+
+        getActivity().runOnUiThread(() -> {
+            if (isEmpty) {
+                // Show empty state with animation
+                recyclerView.setVisibility(View.GONE);
+                emptyStateView.setVisibility(View.VISIBLE);
+
+                // Add fade-in animation
+                emptyStateView.startAnimation(
+                        AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_in)
+                );
+            } else {
+                // Show recycler view
+                recyclerView.setVisibility(View.VISIBLE);
+                emptyStateView.setVisibility(View.GONE);
             }
         });
     }

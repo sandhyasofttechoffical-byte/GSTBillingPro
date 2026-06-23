@@ -2,6 +2,8 @@ package com.sandhyasofttech.gstbillingpro.soldproduct;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +34,8 @@ public class SoldProductsActivity extends AppCompatActivity {
     private List<SoldProductEntry> filteredList = new ArrayList<>();
 
     private SearchView searchView;
-    private TextView tvEmpty;
+    private LinearLayout emptyStateView;
+    private TextView tvEmptyMessage;
     private TabLayout tabDateFilter;
     private Toolbar toolbar;
 
@@ -56,7 +59,8 @@ public class SoldProductsActivity extends AppCompatActivity {
     private void initViews() {
         rvSoldProducts = findViewById(R.id.rvSoldProducts);
         searchView = findViewById(R.id.searchSoldProducts);
-        tvEmpty = findViewById(R.id.tvEmpty);
+        emptyStateView = findViewById(R.id.emptyStateView);
+        tvEmptyMessage = findViewById(R.id.tvEmptyMessage);
         tabDateFilter = findViewById(R.id.tabDateFilter);
         toolbar = findViewById(R.id.toolbar);
     }
@@ -107,8 +111,11 @@ public class SoldProductsActivity extends AppCompatActivity {
                 applyTabFilter(tab.getPosition());
             }
 
-            @Override public void onTabUnselected(TabLayout.Tab tab) {}
-            @Override public void onTabReselected(TabLayout.Tab tab) {
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {}
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
                 applyTabFilter(tab.getPosition());
             }
         });
@@ -119,28 +126,34 @@ public class SoldProductsActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 soldProductList.clear();
-                for (DataSnapshot ds : snapshot.getChildren()) {
-                    Invoice invoice = ds.getValue(Invoice.class);
-                    if (invoice != null && invoice.items != null && !invoice.items.isEmpty()) {
-                        for (InvoiceItem item : invoice.items) {
-                            SoldProductEntry entry = new SoldProductEntry(
-                                    invoice.invoiceNumber != null ? invoice.invoiceNumber : "",
-                                    invoice.invoiceDate != null ? invoice.invoiceDate : "",
-                                    invoice.customerName != null ? invoice.customerName : "",
-                                    item.productName != null ? item.productName : "",
-                                    item.quantity
-                            );
-                            soldProductList.add(entry);
+
+                if (snapshot.exists()) {
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        Invoice invoice = ds.getValue(Invoice.class);
+                        if (invoice != null && invoice.items != null && !invoice.items.isEmpty()) {
+                            for (InvoiceItem item : invoice.items) {
+                                SoldProductEntry entry = new SoldProductEntry(
+                                        invoice.invoiceNumber != null ? invoice.invoiceNumber : "",
+                                        invoice.invoiceDate != null ? invoice.invoiceDate : "",
+                                        invoice.customerName != null ? invoice.customerName : "",
+                                        item.productName != null ? item.productName : "",
+                                        item.quantity
+                                );
+                                soldProductList.add(entry);
+                            }
                         }
                     }
                 }
-                applyTabFilter(tabDateFilter.getSelectedTabPosition());
+
+                // Apply the current tab filter
+                int selectedTabPosition = tabDateFilter.getSelectedTabPosition();
+                applyTabFilter(selectedTabPosition);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(SoldProductsActivity.this, "Failed to load data.", Toast.LENGTH_SHORT).show();
-                tvEmpty.setVisibility(View.VISIBLE);
+                updateEmptyState(true, "Failed to load data. Please try again.");
             }
         });
     }
@@ -149,16 +162,37 @@ public class SoldProductsActivity extends AppCompatActivity {
         LocalDate today = LocalDate.now();
         LocalDate filterDate = null;
 
-        if (position == 0) filterDate = today;
-        else if (position == 1) filterDate = today.minusDays(1);
+        if (position == 0) {
+            filterDate = today;
+            updateEmptyMessage("No products sold today");
+        } else if (position == 1) {
+            filterDate = today.minusDays(1);
+            updateEmptyMessage("No products sold yesterday");
+        } else {
+            updateEmptyMessage("No products sold yet");
+        }
 
         filteredList.clear();
-        for (SoldProductEntry entry : soldProductList) {
-            if (position == 2 || (filterDate != null && entry.isForDate(filterDate))) {
-                filteredList.add(entry);
+
+        if (position == 2) {
+            // All - show everything
+            filteredList.addAll(soldProductList);
+        } else if (filterDate != null) {
+            // Filter by specific date
+            for (SoldProductEntry entry : soldProductList) {
+                if (entry.isForDate(filterDate)) {
+                    filteredList.add(entry);
+                }
             }
         }
-        applySearchFilter(searchView.getQuery().toString());
+
+        // Apply search filter if there's a query
+        String query = searchView.getQuery().toString();
+        if (!query.isEmpty()) {
+            applySearchFilter(query);
+        } else {
+            updateAdapterAndEmptyState(filteredList);
+        }
     }
 
     private void setupSearch() {
@@ -179,20 +213,89 @@ public class SoldProductsActivity extends AppCompatActivity {
 
     private void applySearchFilter(String query) {
         query = query.toLowerCase(Locale.ROOT).trim();
-        List<SoldProductEntry> tempList = new ArrayList<>();
 
-        for (SoldProductEntry entry : filteredList) {
+        if (query.isEmpty()) {
+            // Reset to tab-filtered list
+            updateAdapterAndEmptyState(filteredList);
+            return;
+        }
+
+        // First, get the base list from current tab filter
+        List<SoldProductEntry> baseList = new ArrayList<>();
+        LocalDate today = LocalDate.now();
+        int position = tabDateFilter.getSelectedTabPosition();
+
+        if (position == 0) {
+            for (SoldProductEntry entry : soldProductList) {
+                if (entry.isForDate(today)) {
+                    baseList.add(entry);
+                }
+            }
+        } else if (position == 1) {
+            LocalDate yesterday = today.minusDays(1);
+            for (SoldProductEntry entry : soldProductList) {
+                if (entry.isForDate(yesterday)) {
+                    baseList.add(entry);
+                }
+            }
+        } else {
+            baseList.addAll(soldProductList);
+        }
+
+        // Now apply search filter
+        List<SoldProductEntry> searchResults = new ArrayList<>();
+        for (SoldProductEntry entry : baseList) {
             boolean matches = entry.productName.toLowerCase(Locale.ROOT).contains(query)
                     || entry.customerName.toLowerCase(Locale.ROOT).contains(query)
                     || entry.invoiceDate.contains(query)
                     || entry.invoiceNumber.toLowerCase(Locale.ROOT).contains(query);
 
             if (matches) {
-                tempList.add(entry);
+                searchResults.add(entry);
             }
         }
 
-        adapter.updateList(tempList);
-        tvEmpty.setVisibility(tempList.isEmpty() ? View.VISIBLE : View.GONE);
+        updateAdapterAndEmptyState(searchResults);
+    }
+
+    private void updateAdapterAndEmptyState(List<SoldProductEntry> list) {
+        adapter.updateList(list);
+        boolean isEmpty = list.isEmpty();
+        updateEmptyState(isEmpty, getEmptyMessageForCurrentTab());
+    }
+
+    private void updateEmptyState(boolean isEmpty, String message) {
+        if (isEmpty) {
+            rvSoldProducts.setVisibility(View.GONE);
+            emptyStateView.setVisibility(View.VISIBLE);
+            tvEmptyMessage.setText(message);
+
+            // Add fade-in animation
+            emptyStateView.startAnimation(
+                    AnimationUtils.loadAnimation(this, android.R.anim.fade_in)
+            );
+        } else {
+            rvSoldProducts.setVisibility(View.VISIBLE);
+            emptyStateView.setVisibility(View.GONE);
+        }
+    }
+
+    private void updateEmptyMessage(String message) {
+        tvEmptyMessage.setText(message);
+    }
+
+    private String getEmptyMessageForCurrentTab() {
+        int position = tabDateFilter.getSelectedTabPosition();
+        String searchQuery = searchView.getQuery().toString();
+
+        if (!searchQuery.isEmpty()) {
+            return "No products match \"" + searchQuery + "\"";
+        }
+
+        switch (position) {
+            case 0: return "No products sold today";
+            case 1: return "No products sold yesterday";
+            default: return "No products sold yet";
+        }
     }
 }

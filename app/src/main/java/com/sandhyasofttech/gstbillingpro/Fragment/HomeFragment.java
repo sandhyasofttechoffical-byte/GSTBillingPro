@@ -9,6 +9,8 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,13 +48,13 @@ import java.util.Set;
 public class HomeFragment extends Fragment {
 
     private TextView tvTodaysSales, tvMonthSales;
-    private MaterialButton btnNewInvoice, btnAddCustomer, btnShareExport, btnViewAllInvoices;
+    private MaterialButton btnNewInvoice, btnAddCustomer, btnShareExport, btnViewAllInvoices, btnCreateFirstInvoice;
     private RecyclerView rvRecentActivity;
-    private TextView tvTotalCustomers, tvTotalProducts, tvLastBackup,tvPendingAmount;
+    private TextView tvTotalCustomers, tvTotalProducts, tvLastBackup, tvPendingAmount;
     private ExtendedFloatingActionButton fabNewInvoice;
     private NestedScrollView scrollView;
-    private View layoutPending,layoutTodaySales;
-
+    private View layoutPending, layoutTodaySales;
+    private LinearLayout emptyStateView;
 
     private String userMobile;
     private DatabaseReference userRef, productsRef, invoicesRef;
@@ -85,13 +87,12 @@ public class HomeFragment extends Fragment {
         tvLastBackup = view.findViewById(R.id.tvLastBackup);
         fabNewInvoice = view.findViewById(R.id.fabNewInvoice);
         scrollView = view.findViewById(R.id.scrollView);
-
         tvPendingAmount = view.findViewById(R.id.tvPendingAmount);
         layoutPending = view.findViewById(R.id.layoutPending);
         layoutTodaySales = view.findViewById(R.id.layoutTodaySales);
 
-
-
+        // Empty state views
+        emptyStateView = view.findViewById(R.id.emptyStateView);
 
         // === USER SESSION CHECK ===
         SharedPreferences prefs = requireActivity().getSharedPreferences("APP_PREFS", Context.MODE_PRIVATE);
@@ -100,11 +101,11 @@ public class HomeFragment extends Fragment {
             Toast.makeText(getContext(), "Session expired. Please log in again.", Toast.LENGTH_LONG).show();
             return;
         }
+
         layoutPending.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), PendingPaymentsActivity.class);
             startActivity(intent);
         });
-
 
         // === FIREBASE REFERENCES ===
         userRef = FirebaseDatabase.getInstance().getReference("users").child(userMobile);
@@ -129,14 +130,16 @@ public class HomeFragment extends Fragment {
                     .addToBackStack(null)
                     .commit();
         });
+
         layoutTodaySales.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), TotalOverviewActivity.class);
-            intent.putExtra("FILTER_TYPE", "TODAY"); // optional, useful later
+            intent.putExtra("FILTER_TYPE", "TODAY");
             startActivity(intent);
         });
 
         btnShareExport.setOnClickListener(v -> startActivity(new Intent(getContext(), ShareExportActivity.class)));
         btnViewAllInvoices.setOnClickListener(v -> startActivity(new Intent(getContext(), AllInvoicesActivity.class)));
+
 
         // === FAB CLICK ===
         if (fabNewInvoice != null) {
@@ -145,45 +148,37 @@ public class HomeFragment extends Fragment {
 
         if (scrollView != null && fabNewInvoice != null) {
             final Handler handler = new Handler(Looper.getMainLooper());
-            final long DELAY_SHOW = 1300L; // 1.3 seconds
+            final long DELAY_SHOW = 1300L;
 
             final Runnable showFabRunnable = () -> {
                 if (!fabNewInvoice.isShown()) {
-                    fabNewInvoice.show(); // SLIDE UP FROM BOTTOM
+                    fabNewInvoice.show();
                 }
             };
 
             scrollView.setOnScrollChangeListener(
                     (NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
 
-                        // Cancel previous delayed show
                         handler.removeCallbacks(showFabRunnable);
 
-                        // SCROLLING DOWN → HIDE (SLIDE DOWN)
                         if (scrollY > oldScrollY + 25 && scrollY > 500) {
                             if (fabNewInvoice.isShown()) {
-                                fabNewInvoice.hide(); // SLIDE DOWN
+                                fabNewInvoice.hide();
                             }
-                        }
-
-                        // SCROLLING UP → SHOW IMMEDIATELY (SLIDE UP)
-                        else if (scrollY < oldScrollY - 25) {
+                        } else if (scrollY < oldScrollY - 25) {
                             if (!fabNewInvoice.isShown()) {
-                                fabNewInvoice.show(); // SLIDE UP
+                                fabNewInvoice.show();
                             }
                         }
 
-                        // USER STOPPED SCROLLING → SHOW AFTER 1.3 SEC
                         handler.postDelayed(showFabRunnable, DELAY_SHOW);
                     });
         }
 
-        // === SHOW FAB ON FIRST LOAD ===
         if (fabNewInvoice != null) {
             fabNewInvoice.postDelayed(() -> fabNewInvoice.show(), 400);
         }
     }
-
 
     // === OPEN INVOICE FRAGMENT ===
     private void openInvoiceFragment() {
@@ -258,7 +253,6 @@ public class HomeFragment extends Fragment {
 
     // === LOAD RECENT 10 INVOICES ===
     private void loadRecentInvoices() {
-
         invoicesRef.limitToLast(10)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -275,14 +269,12 @@ public class HomeFragment extends Fragment {
                             String customerName =
                                     ds.child("customerName").getValue(String.class);
 
-                            // ✅ OPTIONAL (DO NOT FILTER)
                             String customerPhone =
                                     ds.child("customerPhone").getValue(String.class);
 
                             Double grandTotal =
                                     ds.child("grandTotal").getValue(Double.class);
 
-                            // ✅ SAFE pending
                             double pendingAmount = 0;
                             Object pendingObj = ds.child("pendingAmount").getValue();
                             if (pendingObj instanceof Number) {
@@ -292,7 +284,6 @@ public class HomeFragment extends Fragment {
                             String date =
                                     ds.child("invoiceDate").getValue(String.class);
 
-                            // ✅ ONLY REQUIRED FIELDS
                             if (invoiceNo != null &&
                                     customerName != null &&
                                     grandTotal != null &&
@@ -311,6 +302,9 @@ public class HomeFragment extends Fragment {
 
                         Collections.reverse(list);
 
+                        // 🔥 UPDATE EMPTY STATE BASED ON LIST SIZE
+                        updateEmptyState(list.isEmpty());
+
                         // 🔥 IMPORTANT
                         rvRecentActivity.setLayoutManager(
                                 new LinearLayoutManager(getContext())
@@ -325,8 +319,32 @@ public class HomeFragment extends Fragment {
                         Toast.makeText(getContext(),
                                 "Failed to load recent invoices",
                                 Toast.LENGTH_SHORT).show();
+                        // Show empty state on error too
+                        updateEmptyState(true);
                     }
                 });
+    }
+
+    // === UPDATE EMPTY STATE VISIBILITY ===
+    private void updateEmptyState(boolean isEmpty) {
+        if (getActivity() == null) return;
+
+        getActivity().runOnUiThread(() -> {
+            if (isEmpty) {
+                // Show empty state with animation
+                rvRecentActivity.setVisibility(View.GONE);
+                emptyStateView.setVisibility(View.VISIBLE);
+
+                // Add fade-in animation
+                emptyStateView.startAnimation(
+                        AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_in)
+                );
+            } else {
+                // Show recycler view
+                rvRecentActivity.setVisibility(View.VISIBLE);
+                emptyStateView.setVisibility(View.GONE);
+            }
+        });
     }
 
     // === TOTAL CUSTOMERS ===

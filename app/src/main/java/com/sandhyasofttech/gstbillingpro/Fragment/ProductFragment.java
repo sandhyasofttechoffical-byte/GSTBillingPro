@@ -12,7 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import androidx.appcompat.widget.SearchView;
+import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +22,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -72,6 +74,7 @@ public class ProductFragment extends Fragment {
     private MaterialButton btnImportProducts;
     private SearchView searchView;
     private TextView tvTotalProducts;
+    private LinearLayout emptyStateView;
 
     private ProductsAdapter adapter;
     private final List<Product> productList = new ArrayList<>();
@@ -117,8 +120,9 @@ public class ProductFragment extends Fragment {
         rvProducts = view.findViewById(R.id.rvProducts);
         fabAddProduct = view.findViewById(R.id.fabAddProduct);
         btnImportProducts = view.findViewById(R.id.btnImportProducts);
-        searchView = (androidx.appcompat.widget.SearchView) view.findViewById(R.id.searchView);
+        searchView = view.findViewById(R.id.searchView);
         tvTotalProducts = view.findViewById(R.id.tvTotalProducts);
+        emptyStateView = view.findViewById(R.id.emptyStateView);
 
         SharedPreferences prefs = requireActivity().getSharedPreferences("APP_PREFS", Context.MODE_PRIVATE);
         userMobile = prefs.getString("USER_MOBILE", null);
@@ -448,6 +452,8 @@ public class ProductFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.w(TAG, "Failed to read products.", error.toException());
                 showToast("Failed to load products: " + error.getMessage());
+                // Show empty state on error
+                updateEmptyState(true);
             }
         });
     }
@@ -466,6 +472,34 @@ public class ProductFragment extends Fragment {
         }
         tvTotalProducts.setText("Total Products: " + filteredList.size());
         adapter.notifyDataSetChanged();
+
+        // Update empty state based on filtered list
+        updateEmptyState(filteredList.isEmpty());
+    }
+
+    /**
+     * Updates the visibility of RecyclerView and Empty State View
+     * @param isEmpty true if no products available
+     */
+    private void updateEmptyState(boolean isEmpty) {
+        if (getActivity() == null) return;
+
+        getActivity().runOnUiThread(() -> {
+            if (isEmpty) {
+                // Show empty state with animation
+                rvProducts.setVisibility(View.GONE);
+                emptyStateView.setVisibility(View.VISIBLE);
+
+                // Add fade-in animation
+                emptyStateView.startAnimation(
+                        AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_in)
+                );
+            } else {
+                // Show recycler view
+                rvProducts.setVisibility(View.VISIBLE);
+                emptyStateView.setVisibility(View.GONE);
+            }
+        });
     }
 
     private String getCellValueAsString(Cell cell) {
@@ -478,7 +512,21 @@ public class ProductFragment extends Fragment {
             default: return "";
         }
     }
-    private double parseDouble(String s) { if (s == null || s.isEmpty()) return 0.0; try { return Double.parseDouble(s); } catch (NumberFormatException e) { return 0.0; } }
-    private int parseInt(String s) { if (s == null || s.isEmpty()) return 0; try { return (int) Double.parseDouble(s); } catch (NumberFormatException e) { return 0; } }
-    private void showToast(String message) { if (getContext() != null) Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show(); }
+
+    private double parseDouble(String s) {
+        if (s == null || s.isEmpty()) return 0.0;
+        try { return Double.parseDouble(s); }
+        catch (NumberFormatException e) { return 0.0; }
+    }
+
+    private int parseInt(String s) {
+        if (s == null || s.isEmpty()) return 0;
+        try { return (int) Double.parseDouble(s); }
+        catch (NumberFormatException e) { return 0; }
+    }
+
+    private void showToast(String message) {
+        if (getContext() != null)
+            Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+    }
 }
